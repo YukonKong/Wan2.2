@@ -76,129 +76,149 @@ def _validate_args(args):
 
 def _parse_args():
     parser = argparse.ArgumentParser(
-        description="Generate a image or video from a text prompt or image using Wan"
+        description="使用Wan从文本提示或图像生成图像或视频"
     )
     parser.add_argument(
         "--task",
         type=str,
         default="t2v-A14B",
         choices=list(WAN_CONFIGS.keys()),
-        help="The task to run.")
+        help="要运行的任务。"
+    )
     parser.add_argument(
         "--size",
         type=str,
         default="1280*720",
         choices=list(SIZE_CONFIGS.keys()),
-        help="The area (width*height) of the generated video. For the I2V task, the aspect ratio of the output video will follow that of the input image."
+        help="生成视频的尺寸（宽度*高度）。对于I2V任务，输出视频的纵横比将遵循输入图像的纵横比。"
     )
     parser.add_argument(
         "--frame_num",
         type=int,
         default=None,
-        help="How many frames of video are generated. The number should be 4n+1"
+        help="生成的视频帧数。该数字应为4n+1。"
     )
     parser.add_argument(
         "--ckpt_dir",
         type=str,
         default=None,
-        help="The path to the checkpoint directory.")
+        help="检查点目录的路径。"
+    )
     parser.add_argument(
         "--offload_model",
         type=str2bool,
         default=None,
-        help="Whether to offload the model to CPU after each model forward, reducing GPU memory usage."
+        help="是否在每次模型前向传播后将模型卸载到CPU，以减少GPU内存使用。"
     )
     parser.add_argument(
         "--ulysses_size",
         type=int,
         default=1,
-        help="The size of the ulysses parallelism in DiT.")
+        help="DiT中ulysses并行的大小。"
+    )
     parser.add_argument(
         "--t5_fsdp",
         action="store_true",
         default=False,
-        help="Whether to use FSDP for T5.")
+        help="是否为T5使用FSDP。"
+    )
     parser.add_argument(
         "--t5_cpu",
         action="store_true",
         default=False,
-        help="Whether to place T5 model on CPU.")
+        help="是否将T5模型放置在CPU上。"
+    )
     parser.add_argument(
         "--dit_fsdp",
         action="store_true",
         default=False,
-        help="Whether to use FSDP for DiT.")
+        help="是否为DiT使用FSDP。"
+    )
     parser.add_argument(
         "--save_file",
         type=str,
         default=None,
-        help="The file to save the generated video to.")
+        help="保存生成的视频的文件。"
+    )
     parser.add_argument(
         "--prompt",
         type=str,
         default=None,
-        help="The prompt to generate the video from.")
+        help="用于生成视频的提示文本。"
+    )
     parser.add_argument(
         "--use_prompt_extend",
         action="store_true",
         default=False,
-        help="Whether to use prompt extend.")
+        help="是否使用提示文本扩展。"
+    )
     parser.add_argument(
         "--prompt_extend_method",
         type=str,
         default="local_qwen",
         choices=["dashscope", "local_qwen"],
-        help="The prompt extend method to use.")
+        help="要使用的提示文本扩展方法。"
+    )
     parser.add_argument(
         "--prompt_extend_model",
         type=str,
         default=None,
-        help="The prompt extend model to use.")
+        help="要使用的提示文本扩展模型。"
+    )
     parser.add_argument(
         "--prompt_extend_target_lang",
         type=str,
         default="zh",
         choices=["zh", "en"],
-        help="The target language of prompt extend.")
+        help="提示文本扩展的目标语言。"
+    )
     parser.add_argument(
         "--base_seed",
         type=int,
         default=-1,
-        help="The seed to use for generating the video.")
+        help="用于生成视频的随机种子。"
+    )
     parser.add_argument(
         "--image",
         type=str,
         default=None,
-        help="The image to generate the video from.")
+        help="用于生成视频的图像。"
+    )
     parser.add_argument(
         "--sample_solver",
         type=str,
         default='unipc',
         choices=['unipc', 'dpm++'],
-        help="The solver used to sample.")
+        help="用于采样的求解器。"
+    )
     parser.add_argument(
-        "--sample_steps", type=int, default=None, help="The sampling steps.")
+        "--sample_steps", type=int, default=None, help="采样步骤数。"
+    )
     parser.add_argument(
         "--sample_shift",
         type=float,
         default=None,
-        help="Sampling shift factor for flow matching schedulers.")
+        help="流匹配调度器的采样偏移因子。"
+    )
     parser.add_argument(
         "--sample_guide_scale",
         type=float,
         default=None,
-        help="Classifier free guidance scale.")
+        help="无分类器引导比例。"
+    )
     parser.add_argument(
         "--convert_model_dtype",
         action="store_true",
         default=False,
-        help="Whether to convert model paramerters dtype.")
+        help="是否转换模型参数的数据类型。"
+    )
 
     args = parser.parse_args()
 
     _validate_args(args)
 
     return args
+
 
 
 def _init_logging(rank):
