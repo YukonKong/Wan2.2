@@ -220,7 +220,6 @@ def _parse_args():
     return args
 
 
-
 def _init_logging(rank):
     # logging
     if rank == 0:
@@ -404,8 +403,11 @@ def generate(args):
         if args.save_file is None:
             formatted_time = datetime.now().strftime("%Y%m%d_%H%M%S")
             formatted_prompt = args.prompt.replace(" ", "_").replace("/",
-                                                                     "_")[:50]
-            suffix = '.mp4'
+                "_")[:50]
+            if args.frame_num == 1:
+                suffix = '.png'
+            else:
+                suffix = '.mp4'
             args.save_file = f"{args.task}_{args.size.replace('*','x') if sys.platform=='win32' else args.size}_{args.ulysses_size}_{formatted_prompt}_{formatted_time}" + suffix
 
         logging.info(f"Saving generated video to {args.save_file}")
